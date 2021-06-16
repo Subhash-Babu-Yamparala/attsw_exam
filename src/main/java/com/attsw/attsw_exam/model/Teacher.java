@@ -1,5 +1,5 @@
 /**
- * Created by: nuwan_r
+ * Created by: subha_babu
  * Created on: 6/16/2021
  **/
 package com.attsw.attsw_exam.model;
@@ -7,6 +7,8 @@ package com.attsw.attsw_exam.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -23,10 +25,12 @@ public class Teacher extends SharedModel implements Serializable {
     private Integer id;
 
     @Basic
+    @NotNull(message = "name cannot be null")
     @Column(name = "teacher_name")
     private String name;
 
     @Basic
+    @NotNull(message = "contact number can not be null")
     @Column(name = "teacher_contactNo")
     private String contactNo;
 
@@ -35,10 +39,13 @@ public class Teacher extends SharedModel implements Serializable {
     private String address;
 
     @Basic
+    @NotNull(message = "email can not be null")
+    @Email(message = "Email should be valid")
     @Column(name = "teacher_email")
     private String email;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacher")
+    @OneToMany(cascade = CascadeType.ALL,targetEntity = Student.class)
+    @JoinColumn(name = "teacher_id_fk", referencedColumnName = "teacher_id")
     private List<Student> student;
 
 }

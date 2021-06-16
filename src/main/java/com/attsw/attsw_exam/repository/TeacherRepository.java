@@ -1,5 +1,5 @@
 /**
- * Created by: nuwan_r
+ * Created by: subha_babu
  * Created on: 6/16/2021
  */
 package com.attsw.attsw_exam.repository;
@@ -19,6 +19,10 @@ public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
     Optional<Teacher> findByIdAndStatus(Integer id, Integer Status);
 
     List<Teacher> findAllByStatus(Integer status);
+
+    Optional<Teacher> findByEmailAndStatus(String email, Integer status);
+
+    Optional<Teacher> findByEmail(String email);
 
     List<Teacher> findAll();
 

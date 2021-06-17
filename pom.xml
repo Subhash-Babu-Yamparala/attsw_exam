@@ -69,6 +69,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>docker-jeckin-implementation-attsw</finalName>
 	</build>
 
 </project>

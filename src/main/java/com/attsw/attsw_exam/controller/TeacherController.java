@@ -28,18 +28,19 @@ public class TeacherController {
         this.studentService = studentService;
     }
 
+    /*save teacher*/
     @PostMapping()
-    public ResponseEntity createStudent(@RequestBody Teacher teacher) {
+    public ResponseEntity createTeacher(@RequestBody Teacher teacher) {
         return this.teacherService.saveTeacher(teacher);
     }
 
     @PutMapping()
-    public ResponseEntity updateStudent(@RequestBody Teacher teacher) {
+    public ResponseEntity updateTeacher(@RequestBody Teacher teacher) {
         return this.teacherService.updateTeacher(teacher);
     }
 
     @GetMapping("/{teacherId}")
-    public ResponseEntity findStudent(@PathVariable("teacherId") Integer teacherId) {
+    public ResponseEntity findTeacher(@PathVariable("teacherId") Integer teacherId) {
         return this.teacherService.SearchTeacherById(teacherId);
     }
 

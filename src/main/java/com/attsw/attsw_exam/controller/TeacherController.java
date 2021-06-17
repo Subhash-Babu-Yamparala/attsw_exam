@@ -34,6 +34,7 @@ public class TeacherController {
         return this.teacherService.saveTeacher(teacher);
     }
 
+    /*update teacher*/
     @PutMapping()
     public ResponseEntity updateTeacher(@RequestBody Teacher teacher) {
         return this.teacherService.updateTeacher(teacher);

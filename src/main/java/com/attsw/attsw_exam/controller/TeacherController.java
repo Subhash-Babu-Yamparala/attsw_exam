@@ -40,6 +40,7 @@ public class TeacherController {
         return this.teacherService.updateTeacher(teacher);
     }
 
+    /*find teacher*/
     @GetMapping("/{teacherId}")
     public ResponseEntity findTeacher(@PathVariable("teacherId") Integer teacherId) {
         return this.teacherService.SearchTeacherById(teacherId);

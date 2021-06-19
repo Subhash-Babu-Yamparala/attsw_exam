@@ -49,4 +49,11 @@ public class SharedModel {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+    public SharedModel(Integer status) {
+        this.status = status;
+    }
+
+    public SharedModel() {
+    }
 }

@@ -44,4 +44,7 @@ public class    Student extends SharedModel implements Serializable {
     @Column(name = "student_contact_no")
     private String contactNo;
 
+    public Student() {
+        super();
+    }
 }

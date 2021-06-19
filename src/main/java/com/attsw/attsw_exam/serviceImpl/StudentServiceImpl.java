@@ -7,6 +7,7 @@ package com.attsw.attsw_exam.serviceImpl;
 import com.attsw.attsw_exam.controller.StudentController;
 import com.attsw.attsw_exam.enums.Status;
 import com.attsw.attsw_exam.model.Student;
+import com.attsw.attsw_exam.model.Teacher;
 import com.attsw.attsw_exam.repository.StudentRepository;
 import com.attsw.attsw_exam.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,57 +31,50 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ResponseEntity saveStudent(Student student) {
+    public Student saveStudent(Student student) {
         return saveOrUpdate(student);
     }
 
-    private ResponseEntity saveOrUpdate(Student student) {
-        return Optional.ofNullable(student)
-                .map(rec -> {
-                    rec.setStatus(Status.ACTIVE.getStatusSeq());
-                    Student savedStudentObject = null;
-                    try {
-                        logger.info("Student Update/Saved Successfully!!");
-                        savedStudentObject = studentRepository.save(rec);
-                        return new ResponseEntity(savedStudentObject, HttpStatus.ACCEPTED);
-                    } catch (Exception e) {
-                        logger.warning("Server Error When Updating Student ");
-                        e.printStackTrace();
-                        return new ResponseEntity("Server Error When Updating Student", HttpStatus.INTERNAL_SERVER_ERROR);
-                    }
-                })
-                .orElse(new ResponseEntity(HttpStatus.BAD_REQUEST));
+    private Student saveOrUpdate(Student student) {
+
+        try {
+            student.setStatus(Status.ACTIVE.getStatusSeq());
+            logger.info("Student Update/Saved Successfully!!");
+        } catch (Exception e) {
+            logger.warning("Server Error When Updating Student ");
+            e.printStackTrace();
+        }
+        return studentRepository.save(student);
+
     }
 
     @Override
-    public ResponseEntity updateStudent(Student student) {
+    public Student updateStudent(Student student) {
         return saveOrUpdate(student);
     }
 
     @Override
-    public ResponseEntity SearchStudentById(Integer studentId) {
-        return Optional.ofNullable(studentId).map(rec -> this.studentRepository
-                .findByIdAndStatus(studentId, Status.ACTIVE.getStatusSeq())
-                .map(filRec -> new ResponseEntity(filRec, HttpStatus.OK))
-                .orElse(new ResponseEntity("Student Not Found", HttpStatus.NOT_FOUND)))
-                .orElse(new ResponseEntity(HttpStatus.BAD_REQUEST));
+    public Student DeleteStudent(Student student) {
+
+        try {
+            student.setStatus(Status.DELETED.getStatusSeq());
+            logger.info("Student Deleted Successfully!!");
+            return student;
+        } catch (Exception e) {
+            logger.warning("Server Error When Delete Student ");
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     @Override
-    public ResponseEntity DeleteStudent(Integer studentId) {
-        return Optional.ofNullable(studentId).map(rec -> this.studentRepository
-                .findByIdAndStatus(studentId, Status.ACTIVE.getStatusSeq())
-                .map(filRec -> {
-                    filRec.setStatus(Status.DELETED.getStatusSeq());
-                    this.studentRepository.save(filRec);
-                    return new ResponseEntity(filRec, HttpStatus.OK);
-                }).orElse(new ResponseEntity("Student Not Found", HttpStatus.NOT_FOUND)))
-                .orElse(new ResponseEntity(HttpStatus.BAD_REQUEST));
+    public List<Student> findAll() {
+        return this.studentRepository.findAllByStatus(Status.ACTIVE.getStatusSeq());
     }
 
     @Override
-    public ResponseEntity findAll() {
-        List<Student> listOfStudent = this.studentRepository.findAllByStatus(Status.ACTIVE.getStatusSeq());
-        return new ResponseEntity(listOfStudent, HttpStatus.OK);
+    public Optional<Student> findByIdAndStatus(Integer id, Integer status) {
+        return this.studentRepository.findByIdAndStatus(id, Status.ACTIVE.getStatusSeq());
     }
 }

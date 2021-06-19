@@ -50,4 +50,11 @@ public class Teacher extends SharedModel implements Serializable {
     @JoinColumn(name = "teacher_id_fk", referencedColumnName = "teacher_id")
     private List<Student> student;
 
+
+    public Teacher() {
+        super();
+
+    }
+
+
 }

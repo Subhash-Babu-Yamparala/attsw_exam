@@ -5,12 +5,12 @@
 package com.attsw.attsw_exam.serviceImpl;
 
 import com.attsw.attsw_exam.enums.Status;
+import com.attsw.attsw_exam.model.Student;
 import com.attsw.attsw_exam.model.Teacher;
+import com.attsw.attsw_exam.repository.StudentRepository;
 import com.attsw.attsw_exam.repository.TeacherRepository;
 import com.attsw.attsw_exam.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,74 +22,82 @@ public class TeacherServiceImpl implements TeacherService {
 
     private static final Logger logger = Logger.getLogger(TeacherServiceImpl.class.getName());
     private final TeacherRepository teacherRepository;
-
+    private final StudentRepository studentRepository;
     @Autowired
-    public TeacherServiceImpl(TeacherRepository teacherRepository) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository, StudentRepository studentRepository) {
         this.teacherRepository = teacherRepository;
+        this.studentRepository = studentRepository;
     }
 
     @Override
-    public ResponseEntity saveTeacher(Teacher teacher) {
-        return Optional.ofNullable(teacher)
-                .map(rec -> this.teacherRepository.findByEmailAndStatus(rec.getEmail(), Status.ACTIVE.getStatusSeq())
-                        .map(updatingRec -> new ResponseEntity("Email Can't Be A Duplicated One", HttpStatus.BAD_REQUEST)).orElseGet(() -> {
-                            rec.setStatus(Status.ACTIVE.getStatusSeq());
-                            logger.info("Teacher Saved Successfully!!");
-                            Teacher savedTeacher = null;
-                            try {
-                                savedTeacher = this.teacherRepository.save(rec);
-                                return new ResponseEntity(savedTeacher, HttpStatus.ACCEPTED);
-                            } catch (Exception e) {
-                                logger.warning("Server Error When Creating Teacher ");
-                                e.printStackTrace();
-                                return new ResponseEntity("Server Error When Updating Teacher", HttpStatus.INTERNAL_SERVER_ERROR);
-                            }
-                        })).orElse(new ResponseEntity(HttpStatus.BAD_REQUEST));
-    }
+    public Teacher saveTeacher(Teacher teacher) {
 
-    @Override
-    public ResponseEntity updateTeacher(Teacher teacher) {
-        return Optional.ofNullable(teacher)
-                .map(rec -> this.teacherRepository.findByIdAndStatus(teacher.getId(), Status.ACTIVE.getStatusSeq())
-                        .map(updatingRec -> {
-                            rec.setStatus(Status.ACTIVE.getStatusSeq());
-                            Teacher savedObject = null;
-                            try {
-                                savedObject = this.teacherRepository.save(rec);
-                                return new ResponseEntity(savedObject, HttpStatus.ACCEPTED);
-                            } catch (Exception e) {
-                                logger.warning("Server Error When Updating Teacher ");
-                                e.printStackTrace();
-                                return new ResponseEntity("Server Error When Updating Teacher", HttpStatus.INTERNAL_SERVER_ERROR);
-                            }
-                        }).orElse(new ResponseEntity("Teacher Object Not Found ", HttpStatus.NOT_FOUND))).orElse(new ResponseEntity(HttpStatus.BAD_REQUEST));
+        teacher.setStatus(Status.ACTIVE.getStatusSeq());
+        logger.info("Teacher Saved Successfully!!");
+        Teacher savedTeacher = null;
+        try {
+            savedTeacher = this.teacherRepository.save(teacher);
+        } catch (Exception e) {
+            logger.warning("Server Error When Creating Teacher ");
+            e.printStackTrace();
+        }
+        return savedTeacher;
 
     }
 
     @Override
-    public ResponseEntity SearchTeacherById(Integer teacherId) {
-        return Optional.ofNullable(teacherId).map(rec -> this.teacherRepository
-                .findByIdAndStatus(teacherId, Status.ACTIVE.getStatusSeq())
-                .map(filRec -> new ResponseEntity(filRec, HttpStatus.OK))
-                .orElse(new ResponseEntity("Teacher Not Found", HttpStatus.NOT_FOUND)))
-                .orElse(new ResponseEntity(HttpStatus.BAD_REQUEST));
+    public Teacher updateTeacher(Teacher teacher) {
+
+        teacher.setStatus(Status.ACTIVE.getStatusSeq());
+        Teacher savedObject = null;
+        try {
+            savedObject = this.teacherRepository.save(teacher);
+        } catch (Exception e) {
+            logger.warning("Server Error When Updating Teacher ");
+            e.printStackTrace();
+        }
+        return savedObject;
+
     }
 
     @Override
-    public ResponseEntity DeleteTeacher(Integer teacherId) {
-        return Optional.ofNullable(teacherId).map(rec -> this.teacherRepository
-                .findByIdAndStatus(teacherId, Status.ACTIVE.getStatusSeq())
-                .map(filRec -> {
-                    filRec.setStatus(Status.DELETED.getStatusSeq());
-                    this.teacherRepository.save(filRec);
-                    return new ResponseEntity(filRec, HttpStatus.OK);
-                }).orElse(new ResponseEntity("Teacher Not Found", HttpStatus.NOT_FOUND)))
-                .orElse(new ResponseEntity(HttpStatus.BAD_REQUEST));
+    public Teacher DeleteTeacher(Teacher teacher) {
+
+        teacher.setStatus(Status.DELETED.getStatusSeq());
+        if(teacher.getStudent()!=null) {
+            teacher.getStudent().forEach(rec -> rec.setStatus(Status.DELETED.getStatusSeq()));
+        }
+        return this.teacherRepository.save(teacher);
+
     }
 
     @Override
-    public ResponseEntity findAll() {
-        List<Teacher> listOfTeacher = this.teacherRepository.findAllByStatus(Status.ACTIVE.getStatusSeq());
-        return new ResponseEntity(listOfTeacher, HttpStatus.OK);
+    public List<Teacher> findAllActive() {
+       return this.teacherRepository.findAllByStatus(Status.ACTIVE.getStatusSeq());
+
     }
+
+    @Override
+    public List<Teacher> findAllDeactive() {
+        return this.teacherRepository.findAllByStatus(Status.DELETED.getStatusSeq());
+
+    }
+
+    @Override
+    public List<Teacher> findAll() {
+        return this.teacherRepository.findAll();
+
+    }
+
+
+    @Override
+    public Optional<Teacher> findByIdAndStatus(Integer id, Integer status) {
+        return this.teacherRepository.findByIdAndStatus(id, Status.ACTIVE.getStatusSeq());
+    }
+
+    @Override
+    public Optional<Teacher> findByEmailAndStatus(String email, Integer status) {
+        return this.teacherRepository.findByEmailAndStatus(email, Status.ACTIVE.getStatusSeq());
+    }
+
 }

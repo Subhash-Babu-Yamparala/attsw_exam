@@ -7,16 +7,18 @@ package com.attsw.attsw_exam.service;
 import com.attsw.attsw_exam.model.Student;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface StudentService {
 
-    ResponseEntity saveStudent(Student student);
+    Student saveStudent(Student student);
 
-    ResponseEntity updateStudent(Student student);
+    Student updateStudent(Student student);
 
-    ResponseEntity SearchStudentById(Integer studentId);
+    Student DeleteStudent(Student student);
 
-    ResponseEntity DeleteStudent(Integer studentId);
+    List<Student> findAll();
 
-    ResponseEntity findAll();
-
+    Optional<Student> findByIdAndStatus(Integer id, Integer status);
 }

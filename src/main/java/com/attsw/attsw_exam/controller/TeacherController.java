@@ -60,6 +60,7 @@ public class TeacherController {
 
     }
 
+    /*delete teacher*/
     @DeleteMapping("/{teacherId}")
     public ResponseEntity<Teacher> deleteTeacher(@PathVariable("teacherId") Integer teacherId) {
         return Optional.ofNullable(teacherId)

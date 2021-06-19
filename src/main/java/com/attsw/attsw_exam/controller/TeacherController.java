@@ -4,10 +4,12 @@
  **/
 package com.attsw.attsw_exam.controller;
 
+import com.attsw.attsw_exam.dto.TeacherDto;
 import com.attsw.attsw_exam.enums.Status;
 import com.attsw.attsw_exam.model.Teacher;
 import com.attsw.attsw_exam.service.StudentService;
 import com.attsw.attsw_exam.service.TeacherService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +26,20 @@ public class TeacherController {
 
     private final TeacherService teacherService;
     private final StudentService studentService;
+    private ModelMapper modelMapper;
 
     @Autowired
-    public TeacherController(TeacherService teacherService, StudentService studentService) {
+    public TeacherController(TeacherService teacherService, StudentService studentService, ModelMapper modelMapper) {
         this.teacherService = teacherService;
         this.studentService = studentService;
+        this.modelMapper = modelMapper;
     }
 
     /*save teacher*/
     @PostMapping()
-    public ResponseEntity createTeacher(@RequestBody Teacher teacher) {
+    public ResponseEntity createTeacher(@RequestBody TeacherDto teacherDto) {
 
+        Teacher teacher = modelMapper.map(teacherDto, Teacher.class);
         return Optional.ofNullable(teacher)
                 .map(teacherObj -> this.teacherService.findByEmailAndStatus(teacher.getEmail(), Status.ACTIVE.getStatusSeq())
                         .map(updatingRec -> new ResponseEntity("Email Can't Be A Duplicated One", HttpStatus.BAD_REQUEST))
@@ -47,10 +52,12 @@ public class TeacherController {
 
     /*update teacher*/
     @PutMapping()
-    public ResponseEntity updateTeacher(@RequestBody Teacher teacher) {
+    public ResponseEntity updateTeacher(@RequestBody TeacherDto teacherDto) {
+
+        Teacher teacher = modelMapper.map(teacherDto, Teacher.class);
         return Optional.ofNullable(teacher)
                 .map(rec -> this.teacherService.findByIdAndStatus(teacher.getId(), Status.ACTIVE.getStatusSeq())
-                        .map(updatingRec -> Optional.ofNullable(this.teacherService.updateTeacher(updatingRec))
+                        .map(updatingRec -> Optional.ofNullable(this.teacherService.updateTeacher(teacher))
                                 .map(val -> new ResponseEntity(val, HttpStatus.OK))
                                 .orElse(new ResponseEntity("Teacher Not Saved", HttpStatus.INTERNAL_SERVER_ERROR)))
                         .orElse(new ResponseEntity("Teacher Object Not Found ", HttpStatus.NOT_FOUND)))
@@ -62,7 +69,7 @@ public class TeacherController {
     public ResponseEntity deleteTeacher(@PathVariable("teacherId") Integer teacherId){
         return Optional.ofNullable(teacherId)
                 .map(rec -> this.teacherService.findByIdAndStatus(teacherId, Status.ACTIVE.getStatusSeq())
-                        .map(filRec -> Optional.ofNullable(this.teacherService.DeleteTeacher(filRec))
+                        .map(filRec -> Optional.ofNullable(this.teacherService.deleteTeacher(filRec))
                                 .map(deletedRec -> new ResponseEntity(deletedRec, HttpStatus.OK))
                                 .orElse(new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)))
                         .orElse(new ResponseEntity("Teacher Not Found", HttpStatus.NOT_FOUND)))

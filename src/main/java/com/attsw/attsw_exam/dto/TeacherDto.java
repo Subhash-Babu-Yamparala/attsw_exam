@@ -4,10 +4,13 @@
  **/
 package com.attsw.attsw_exam.dto;
 
+import com.attsw.attsw_exam.model.Student;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class TeacherDto {
+public class TeacherDto extends SharedModelDto {
 
     private Integer id;
 
@@ -18,4 +21,6 @@ public class TeacherDto {
     private String address;
 
     private String email;
+
+    private List<Student> student;
 }

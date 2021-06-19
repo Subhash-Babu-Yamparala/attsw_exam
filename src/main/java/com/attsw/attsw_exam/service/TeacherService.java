@@ -5,18 +5,17 @@
 package com.attsw.attsw_exam.service;
 
 import com.attsw.attsw_exam.model.Teacher;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TeacherService {
 
-    Teacher saveTeacher(Teacher Teacher);
+    Teacher saveTeacher(Teacher teacher);
 
-    Teacher updateTeacher(Teacher Teacher);
+    Teacher updateTeacher(Teacher teacher);
 
-    Teacher DeleteTeacher(Teacher teacher);
+    Teacher deleteTeacher(Teacher teacher);
 
     List<Teacher> findAllActive();
 

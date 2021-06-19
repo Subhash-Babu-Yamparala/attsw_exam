@@ -15,27 +15,14 @@ import com.attsw.attsw_exam.model.Student;
 import com.attsw.attsw_exam.model.Teacher;
 import com.attsw.attsw_exam.repository.TeacherRepository;
 import com.attsw.attsw_exam.service.TeacherService;
-import javafx.application.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -195,7 +182,7 @@ public class TeacherControllerTest {
         teacher3.setId(128);
         teacher3.setStudent(listODStudent2);
 
-        teacherService.DeleteTeacher(teacher3);
+        teacherService.deleteTeacher(teacher3);
         verify(teacherRepository,times(1)).save(teacher3);
 
     }

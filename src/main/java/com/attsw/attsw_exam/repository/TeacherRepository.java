@@ -16,7 +16,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 
     Optional<Teacher> findById(Integer id);
 
-    Optional<Teacher> findByIdAndStatus(Integer id, Integer Status);
+    Optional<Teacher> findByIdAndStatus(Integer id, Integer status);
 
     List<Teacher> findAllByStatus(Integer status);
 

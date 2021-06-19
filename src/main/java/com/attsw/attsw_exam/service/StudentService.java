@@ -5,7 +5,6 @@
 package com.attsw.attsw_exam.service;
 
 import com.attsw.attsw_exam.model.Student;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,7 @@ public interface StudentService {
 
     Student updateStudent(Student student);
 
-    Student DeleteStudent(Student student);
+    Student deleteStudent(Student student);
 
     List<Student> findAll();
 

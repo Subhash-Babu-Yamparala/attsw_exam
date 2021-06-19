@@ -1,14 +1,10 @@
 package com.attsw.attsw_exam.model;
 
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.repository.Temporal;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.TemporalType;
 import java.util.Date;
 
 @MappedSuperclass

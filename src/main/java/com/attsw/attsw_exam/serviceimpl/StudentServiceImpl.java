@@ -2,17 +2,13 @@
  * Created by: subha_babu
  * Created on: 6/16/2021
  **/
-package com.attsw.attsw_exam.serviceImpl;
+package com.attsw.attsw_exam.serviceimpl;
 
-import com.attsw.attsw_exam.controller.StudentController;
 import com.attsw.attsw_exam.enums.Status;
 import com.attsw.attsw_exam.model.Student;
-import com.attsw.attsw_exam.model.Teacher;
 import com.attsw.attsw_exam.repository.StudentRepository;
 import com.attsw.attsw_exam.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,7 +38,6 @@ public class StudentServiceImpl implements StudentService {
             logger.info("Student Update/Saved Successfully!!");
         } catch (Exception e) {
             logger.warning("Server Error When Updating Student ");
-            e.printStackTrace();
         }
         return studentRepository.save(student);
 
@@ -54,7 +49,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student DeleteStudent(Student student) {
+    public Student deleteStudent(Student student) {
 
         try {
             student.setStatus(Status.DELETED.getStatusSeq());
@@ -62,7 +57,6 @@ public class StudentServiceImpl implements StudentService {
             return student;
         } catch (Exception e) {
             logger.warning("Server Error When Delete Student ");
-            e.printStackTrace();
             return null;
         }
 

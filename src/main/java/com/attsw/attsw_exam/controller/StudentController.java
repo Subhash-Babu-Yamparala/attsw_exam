@@ -4,7 +4,6 @@
  **/
 package com.attsw.attsw_exam.controller;
 
-import com.attsw.attsw_exam.dto.StudentDto;
 import com.attsw.attsw_exam.enums.Status;
 import com.attsw.attsw_exam.model.Student;
 import com.attsw.attsw_exam.service.StudentService;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -57,7 +55,7 @@ public class StudentController {
         return Optional.ofNullable(studentId).map(rec -> this.studentService
                 .findByIdAndStatus(studentId, Status.ACTIVE.getStatusSeq())
                 .map(filRec -> {
-                    Optional.ofNullable(this.studentService.DeleteStudent(filRec))
+                    Optional.ofNullable(this.studentService.deleteStudent(filRec))
                             .map(deleRec -> new ResponseEntity(deleRec, HttpStatus.OK))
                             .orElse(new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR));
                     return new ResponseEntity(filRec, HttpStatus.OK);

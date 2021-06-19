@@ -7,7 +7,7 @@ package com.attsw.attsw_exam.dto;
 import lombok.Data;
 
 @Data
-public class StudentDto {
+public class StudentDto extends SharedModelDto {
 
     private Integer id;
 

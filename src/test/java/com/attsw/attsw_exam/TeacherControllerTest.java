@@ -155,11 +155,8 @@ public class TeacherControllerTest {
         teacher3.setId(128);
         teacher3.setStudent(listODStudent2);
 
-        Teacher updatedTeacher = teacherService.updateTeacher(teacher3);
-        when(teacherRepository.findByEmailAndStatus("shewagv1@gmail.com",Status.ACTIVE.getStatusSeq()).get())
-                .thenReturn(teacher3);
-
-        assertEquals(teacher3.getEmail(),updatedTeacher.getEmail());
+        teacherService.updateTeacher(teacher3,teacher3);
+        verify(teacherRepository,times(1)).save(teacher3);
     }
 
     @Test

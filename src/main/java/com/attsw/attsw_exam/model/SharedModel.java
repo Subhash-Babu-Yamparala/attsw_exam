@@ -17,7 +17,7 @@ public class SharedModel {
     private Integer status;
 
 
-    @Column(name = "created_date")
+    @Column(name = "created_date", updatable = false)
     @CreatedDate
     public Date getCreatedDate() {
         return createdDate;

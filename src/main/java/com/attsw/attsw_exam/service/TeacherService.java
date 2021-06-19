@@ -13,7 +13,7 @@ public interface TeacherService {
 
     Teacher saveTeacher(Teacher teacher);
 
-    Teacher updateTeacher(Teacher teacher);
+    Teacher updateTeacher(Teacher teacher,Teacher dbTeacher);
 
     Teacher deleteTeacher(Teacher teacher);
 

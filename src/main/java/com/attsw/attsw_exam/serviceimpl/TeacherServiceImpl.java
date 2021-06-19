@@ -42,9 +42,10 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Teacher updateTeacher(Teacher teacher) {
+    public Teacher updateTeacher(Teacher teacher, Teacher dbTeacher) {
 
         teacher.setStatus(Status.ACTIVE.getStatusSeq());
+        teacher.setCreatedDate(dbTeacher.getCreatedDate());
         Teacher savedObject = null;
         try {
             savedObject = this.teacherRepository.save(teacher);

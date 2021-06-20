@@ -20,4 +20,14 @@ public interface StudentService {
     List<Student> findAll();
 
     Optional<Student> findByIdAndStatus(Integer id, Integer status);
+
+    List<Student> findAllActiveStudent();
+
+    Optional<Student> findAllByAge(Integer age);
+
+    Optional<Student> findAllByContactNo(String mobileNo);
+
+    Optional<Student> findAllByCollageName(String collageName);
+
+    List<Student> findAllDeactive();
 }

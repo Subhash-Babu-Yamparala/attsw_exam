@@ -54,7 +54,8 @@ public class StudentServiceImpl implements StudentService {
         try {
             student.setStatus(Status.DELETED.getStatusSeq());
             logger.info("Student Deleted Successfully!!");
-            return student;
+            Student student1 = studentRepository.save(student);
+            return student1;
         } catch (Exception e) {
             logger.warning("Server Error When Delete Student ");
             return null;
@@ -70,5 +71,30 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Optional<Student> findByIdAndStatus(Integer id, Integer status) {
         return this.studentRepository.findByIdAndStatus(id, Status.ACTIVE.getStatusSeq());
+    }
+
+    @Override
+    public List<Student> findAllActiveStudent() {
+        return this.studentRepository.findAllByStatus(Status.ACTIVE.getStatusSeq());
+    }
+
+    @Override
+    public Optional<Student> findAllByAge(Integer age) {
+        return this.studentRepository.findAllByAge(age);
+    }
+
+    @Override
+    public Optional<Student> findAllByContactNo(String mobileNo) {
+        return this.studentRepository.findAllByContactNo(mobileNo);
+    }
+
+    @Override
+    public Optional<Student> findAllByCollageName(String collageName) {
+        return this.studentRepository.findAllByCollageName(collageName);
+    }
+
+    @Override
+    public List<Student> findAllDeactive() {
+        return this.studentRepository.findAllByStatus(Status.DELETED.getStatusSeq());
     }
 }

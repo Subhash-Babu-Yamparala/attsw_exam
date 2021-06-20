@@ -22,4 +22,12 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 
     List<Student> findAll();
 
+    Optional<Student> findAllByAge(Integer age);
+
+    Optional<Student> findAllByContactNo(String mobileNo);
+
+    Optional<Student> findAllByCollageName(String collageName);
+
+
+
 }

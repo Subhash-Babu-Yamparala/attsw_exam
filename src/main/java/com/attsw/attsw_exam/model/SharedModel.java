@@ -6,7 +6,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.util.Date;
-import java.util.Objects;
 
 @MappedSuperclass
 public class SharedModel {
@@ -54,28 +53,5 @@ public class SharedModel {
     public SharedModel() {
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SharedModel that = (SharedModel) o;
-        return Objects.equals(getCreatedDate(), that.getCreatedDate()) &&
-                Objects.equals(getLastModifiedDate(), that.getLastModifiedDate()) &&
-                Objects.equals(getStatus(), that.getStatus());
-    }
 
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(getCreatedDate(), getLastModifiedDate(), getStatus());
-    }
-
-    @Override
-    public String toString() {
-        return "SharedModel{" +
-                "createdDate=" + createdDate +
-                ", lastModifiedDate=" + lastModifiedDate +
-                ", status=" + status +
-                '}';
-    }
 }

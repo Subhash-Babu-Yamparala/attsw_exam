@@ -4,10 +4,7 @@
  **/
 package com.attsw.attsw_exam.dto;
 
-import lombok.Data;
-
 import java.util.Date;
-import java.util.Objects;
 
 public class SharedModelDto {
 
@@ -39,28 +36,5 @@ public class SharedModelDto {
         this.status = status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SharedModelDto that = (SharedModelDto) o;
-        return Objects.equals(getCreatedDate(), that.getCreatedDate()) &&
-                Objects.equals(getLastModifiedDate(), that.getLastModifiedDate()) &&
-                Objects.equals(getStatus(), that.getStatus());
-    }
 
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(getCreatedDate(), getLastModifiedDate(), getStatus());
-    }
-
-    @Override
-    public String toString() {
-        return "SharedModelDto{" +
-                "createdDate=" + createdDate +
-                ", lastModifiedDate=" + lastModifiedDate +
-                ", status=" + status +
-                '}';
-    }
 }

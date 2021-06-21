@@ -1,5 +1,6 @@
 package com.attsw.attsw_exam;
 
+import com.attsw.attsw_exam.dto.StudentDto;
 import com.attsw.attsw_exam.enums.Status;
 import com.attsw.attsw_exam.model.Student;
 import com.attsw.attsw_exam.model.Teacher;
@@ -354,7 +355,55 @@ class AttswExamApplicationTests {
 		verify(studentRepository,times(1)).save(student2);
 	}
 
-	/*student controller class*/
+    @Test
+    public void testDeleteStudentService() {
+
+        Student student2 = new Student();
+        student2.setId(192);
+        student2.setAge(29);
+        student2.setCollageName("Raju bhai");
+        student2.setContactNo("0753833833");
+
+        studentService.deleteStudent(student2);
+        verify(studentRepository,times(1)).save(student2);
+    }
+
+	@Test
+	public void testFindStudentByAge() {
+
+		StudentDto student2 = new StudentDto();
+		student2.setAge(44);
+
+		studentService.findAllByAge(student2.getAge());
+		verify(studentRepository,times(1)).findAllByAge(student2.getAge());
+
+	}
+
+	@Test
+	public void testFindStudentByCollageName() {
+
+		StudentDto student2 = new StudentDto();
+		student2.setCollageName("Rahula");
+
+		studentService.findAllByCollageName(student2.getCollageName());
+		verify(studentRepository,times(1)).findAllByCollageName(student2.getCollageName());
+
+	}
+
+	@Test
+	public void testFindByIdAndStatus() {
+
+		StudentDto student2 = new StudentDto();
+		student2.setId(123);
+		student2.setStatus(Status.ACTIVE.getStatusSeq());
+
+		studentService.findByIdAndStatus(student2.getId(),student2.getStatus());
+		verify(studentRepository,times(1)).findByIdAndStatus(student2.getId(),student2.getStatus());
+
+	}
+
+
+    /*student controller class*/
 
 	@Test
 	public void findAllTest() throws Exception {

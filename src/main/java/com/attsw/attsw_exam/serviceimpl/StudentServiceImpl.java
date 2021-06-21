@@ -33,13 +33,10 @@ public class StudentServiceImpl implements StudentService {
 
     private Student saveOrUpdate(Student student) {
 
-        try {
+
             student.setStatus(Status.ACTIVE.getStatusSeq());
             logger.info("Student Update/Saved Successfully!!");
-        } catch (Exception e) {
-            logger.warning("Server Error When Updating Student ");
-        }
-        return studentRepository.save(student);
+            return studentRepository.save(student);
 
     }
 
@@ -51,15 +48,9 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student deleteStudent(Student student) {
 
-        try {
             student.setStatus(Status.DELETED.getStatusSeq());
             logger.info("Student Deleted Successfully!!");
-            Student student1 = studentRepository.save(student);
-            return student1;
-        } catch (Exception e) {
-            logger.warning("Server Error When Delete Student ");
-            return null;
-        }
+            return studentRepository.save(student);
 
     }
 

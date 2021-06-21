@@ -10,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -102,34 +101,4 @@ public class Teacher extends SharedModel implements Serializable {
 
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Teacher teacher = (Teacher) o;
-        return Objects.equals(getId(), teacher.getId()) &&
-                Objects.equals(getName(), teacher.getName()) &&
-                Objects.equals(getContactNo(), teacher.getContactNo()) &&
-                Objects.equals(getAddress(), teacher.getAddress()) &&
-                Objects.equals(getEmail(), teacher.getEmail()) &&
-                Objects.equals(getStudent(), teacher.getStudent());
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(getId(), getName(), getContactNo(), getAddress(), getEmail(), getStudent());
-    }
-
-    @Override
-    public String toString() {
-        return "Teacher{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", contactNo='" + contactNo + '\'' +
-                ", address='" + address + '\'' +
-                ", email='" + email + '\'' +
-                ", student=" + student +
-                '}';
-    }
 }

@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -86,32 +85,5 @@ public class    Student extends SharedModel implements Serializable {
         this.contactNo = contactNo;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Student student = (Student) o;
-        return Objects.equals(getId(), student.getId()) &&
-                Objects.equals(getName(), student.getName()) &&
-                Objects.equals(getAge(), student.getAge()) &&
-                Objects.equals(getCollageName(), student.getCollageName()) &&
-                Objects.equals(getContactNo(), student.getContactNo());
-    }
 
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(getId(), getName(), getAge(), getCollageName(), getContactNo());
-    }
-
-    @Override
-    public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", collageName='" + collageName + '\'' +
-                ", contactNo='" + contactNo + '\'' +
-                '}';
-    }
 }

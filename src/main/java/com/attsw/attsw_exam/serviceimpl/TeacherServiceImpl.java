@@ -32,11 +32,7 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setStatus(Status.ACTIVE.getStatusSeq());
         logger.info("Teacher Saved Successfully!!");
         Teacher savedTeacher = null;
-        try {
-            savedTeacher = this.teacherRepository.save(teacher);
-        } catch (Exception e) {
-            logger.warning("Server Error When Creating Teacher ");
-        }
+        savedTeacher = this.teacherRepository.save(teacher);
         return savedTeacher;
 
     }
@@ -47,11 +43,7 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setStatus(Status.ACTIVE.getStatusSeq());
         teacher.setCreatedDate(dbTeacher.getCreatedDate());
         Teacher savedObject = null;
-        try {
-            savedObject = this.teacherRepository.save(teacher);
-        } catch (Exception e) {
-            logger.warning("Server Error When Updating Teacher ");
-        }
+        savedObject = this.teacherRepository.save(teacher);
         return savedObject;
 
     }

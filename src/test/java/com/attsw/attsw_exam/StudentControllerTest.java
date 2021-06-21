@@ -13,12 +13,21 @@ import com.attsw.attsw_exam.service.StudentService;
 import com.attsw.attsw_exam.service.TeacherService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,7 +36,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        classes = AttswExamApplication.class
+)
+@AutoConfigureMockMvc
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class StudentControllerTest {
 
     @Autowired
@@ -35,6 +49,9 @@ public class StudentControllerTest {
 
     @MockBean
     private StudentRepository studentRepository;
+
+    @Autowired
+    MockMvc mockMvc;
 
     @Test
     public void testActiveStudent() {
@@ -138,6 +155,26 @@ public class StudentControllerTest {
 
         assertEquals(2,studentService.findAllActiveStudent().size());
     }
+
+    @Test
+    public void findAllTest() throws Exception {
+
+        Mockito.when(studentRepository.findAll()).thenReturn(
+                Collections.emptyList()
+        );
+
+        MvcResult mvcResult = mockMvc.perform(
+                MockMvcRequestBuilders.get("/student/findAll")
+                        .accept(MediaType.APPLICATION_JSON)
+        ).andReturn();
+
+        System.out.println(mvcResult);
+
+        Mockito.verify(studentRepository).findAllByStatus(Status.ACTIVE.getStatusSeq());
+    }
+
+
+
 
 
 

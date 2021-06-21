@@ -447,6 +447,51 @@ class AttswExamApplicationTests {
 
 		Mockito.verify(studentRepository).findAllByStatus(Status.ACTIVE.getStatusSeq());
 	}
+
+	@Test
+	public void findAllTeachers() throws Exception {
+
+		Mockito.when(teacherRepository.findAll()).thenReturn(
+				Collections.emptyList()
+		);
+
+		MvcResult mvcResult = mockMvc.perform(
+				MockMvcRequestBuilders.get("/teacher/findAll")
+						.accept(MediaType.APPLICATION_JSON)
+		).andReturn();
+
+		Mockito.verify(teacherRepository).findAll();
+	}
+
+	@Test
+	public void findAllActiveTeachers() throws Exception {
+
+		Mockito.when(teacherRepository.findAll()).thenReturn(
+				Collections.emptyList()
+		);
+
+		MvcResult mvcResult = mockMvc.perform(
+				MockMvcRequestBuilders.get("/teacher/findAllActive")
+						.accept(MediaType.APPLICATION_JSON)
+		).andReturn();
+
+		Mockito.verify(teacherRepository).findAllByStatus(Status.ACTIVE.getStatusSeq());
+	}
+
+	@Test
+	public void findAllDeactiveTeachers() throws Exception {
+
+		Mockito.when(teacherRepository.findAll()).thenReturn(
+				Collections.emptyList()
+		);
+
+		MvcResult mvcResult = mockMvc.perform(
+				MockMvcRequestBuilders.get("/teacher/findAllDeactive")
+						.accept(MediaType.APPLICATION_JSON)
+		).andReturn();
+
+		Mockito.verify(teacherRepository).findAllByStatus(Status.DELETED.getStatusSeq());
+	}
 	/*..///....student controller class*/
 
 

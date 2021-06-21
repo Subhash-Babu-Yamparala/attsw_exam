@@ -28,9 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
@@ -376,8 +374,6 @@ class AttswExamApplicationTests {
 	}
 	/*..///....student controller class*/
 
-	@Test
-	void contextLoads() {
-	}
+
 
 }

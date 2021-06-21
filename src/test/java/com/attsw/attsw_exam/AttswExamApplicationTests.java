@@ -328,6 +328,34 @@ class AttswExamApplicationTests {
 		verify(teacherRepository,times(1)).findByEmailAndStatus("sachin@gmail.com",Status.ACTIVE.getStatusSeq());
 	}
 
+
+	@Test
+	public void testSaveService() {
+
+		Student student2 = new Student();
+		student2.setId(192);
+		student2.setAge(29);
+		student2.setCollageName("Raju bhai");
+		student2.setContactNo("0753833833");
+
+		when(studentRepository.save(student2)).thenReturn(student2);
+
+		assertEquals(student2,studentService.saveStudent(student2));
+	}
+
+	@Test
+	public void testUpdateStudentService() {
+
+		Student student2 = new Student();
+		student2.setId(192);
+		student2.setAge(29);
+		student2.setCollageName("Raju bhai");
+		student2.setContactNo("0753833833");
+
+		studentService.updateStudent(student2);
+		verify(studentRepository,times(1)).save(student2);
+	}
+
 	/*student controller class*/
 
 	@Test

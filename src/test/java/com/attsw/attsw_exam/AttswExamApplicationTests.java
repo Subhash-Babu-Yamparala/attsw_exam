@@ -3,6 +3,7 @@ package com.attsw.attsw_exam;
 import com.attsw.attsw_exam.dto.StudentDto;
 import com.attsw.attsw_exam.dto.TeacherDto;
 import com.attsw.attsw_exam.enums.Status;
+import com.attsw.attsw_exam.model.SharedModel;
 import com.attsw.attsw_exam.model.Student;
 import com.attsw.attsw_exam.model.Teacher;
 import com.attsw.attsw_exam.repository.StudentRepository;
@@ -26,11 +27,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -347,6 +350,8 @@ class AttswExamApplicationTests {
 		student2.setAge(29);
 		student2.setCollageName("Raju bhai");
 		student2.setContactNo("0753833833");
+		student2.setCreatedDate(new Date());
+		student2.setLastModifiedDate(new Date());
 
 		when(studentRepository.save(student2)).thenReturn(student2);
 
@@ -361,8 +366,13 @@ class AttswExamApplicationTests {
 		student2Dto.setAge(29);
 		student2Dto.setCollageName("Raju bhai");
 		student2Dto.setContactNo("0753833833");
+		student2Dto.setCreatedDate(new Date());
+		student2Dto.setLastModifiedDate(new Date());
+		student2Dto.setStatus(Status.ACTIVE.getStatusSeq());
 
 		Student student2 = this.modelMapper.map(student2Dto,Student.class);
+
+		SharedModel sharedModel = new SharedModel(2);
 
 		studentService.updateStudent(student2);
 		verify(studentRepository,times(1)).save(student2);
@@ -371,7 +381,9 @@ class AttswExamApplicationTests {
 		assertEquals(student2.getAge(),student2Dto.getAge());
 		assertEquals(student2.getCollageName(),student2Dto.getCollageName());
 		assertEquals(student2.getName(),student2Dto.getName());
-
+		assertEquals(Status.findOne(2).getStatusSeq(),Status.ACTIVE.getStatusSeq());
+		assertEquals(Status.findOne(2).getStatusName(),Status.ACTIVE.getStatusName());
+		assertEquals(sharedModel.getStatus(),Status.ACTIVE.getStatusSeq());
 	}
 
     @Test
@@ -382,7 +394,7 @@ class AttswExamApplicationTests {
 		student2Dto.setAge(29);
 		student2Dto.setCollageName("Raju bhai");
 		student2Dto.setContactNo("0753833833");
-
+		student2Dto.setStatus(Status.ACTIVE.getStatusSeq());
 		Student student2 = this.modelMapper.map(student2Dto,Student.class);
 
         studentService.deleteStudent(student2);
@@ -392,6 +404,8 @@ class AttswExamApplicationTests {
 		assertEquals(student2.getAge(),student2Dto.getAge());
 		assertEquals(student2.getCollageName(),student2Dto.getCollageName());
 		assertEquals(student2.getName(),student2Dto.getName());
+		assertEquals(student2.getLastModifiedDate(),student2Dto.getLastModifiedDate());
+		assertNotEquals(student2.getStatus(),student2Dto.getStatus());
     }
 
 	@Test

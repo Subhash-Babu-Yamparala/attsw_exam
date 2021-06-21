@@ -1,6 +1,7 @@
 package com.attsw.attsw_exam;
 
 import com.attsw.attsw_exam.dto.StudentDto;
+import com.attsw.attsw_exam.dto.TeacherDto;
 import com.attsw.attsw_exam.enums.Status;
 import com.attsw.attsw_exam.model.Student;
 import com.attsw.attsw_exam.model.Teacher;
@@ -11,6 +12,7 @@ import com.attsw.attsw_exam.service.TeacherService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,6 +56,9 @@ class AttswExamApplicationTests {
 
 	@Autowired
 	MockMvc mockMvc;
+
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Test
 	public void testActiveTeachersList() {
@@ -138,19 +143,25 @@ class AttswExamApplicationTests {
 		student2.setContactNo("0753833833");
 		listODStudent2.add(student2);
 
-		Teacher teacher3 = new Teacher();
-		teacher3.setStatus(Status.ACTIVE.getStatusSeq());
-		teacher3.setAddress("Panjab");
-		teacher3.setContactNo("0672728882");
-		teacher3.setEmail("shewag@gmail.com");
-		teacher3.setName("shewag");
-		teacher3.setId(128);
-		teacher3.setStudent(listODStudent2);
+		TeacherDto teacher3Dto = new TeacherDto();
+		teacher3Dto.setStatus(Status.ACTIVE.getStatusSeq());
+		teacher3Dto.setAddress("Panjab");
+		teacher3Dto.setContactNo("0672728882");
+		teacher3Dto.setEmail("shewag@gmail.com");
+		teacher3Dto.setName("shewag");
+		teacher3Dto.setId(128);
 
+		Teacher teacher3 = this.modelMapper.map(teacher3Dto,Teacher.class);
+		teacher3.setStudent(listODStudent2);
 
 		when(teacherRepository.save(teacher3)).thenReturn(teacher3);
 
 		assertEquals(teacher3,teacherService.saveTeacher(teacher3));
+		assertEquals(teacher3.getContactNo(),teacher3Dto.getContactNo());
+		assertEquals(teacher3.getId(),teacher3Dto.getId());
+		assertEquals(teacher3.getEmail(),teacher3Dto.getEmail());
+		assertEquals(teacher3.getAddress(),teacher3Dto.getAddress());
+		assertEquals(teacher3.getName(),teacher3Dto.getName());
 	}
 
 	@Test
@@ -345,27 +356,42 @@ class AttswExamApplicationTests {
 	@Test
 	public void testUpdateStudentService() {
 
-		Student student2 = new Student();
-		student2.setId(192);
-		student2.setAge(29);
-		student2.setCollageName("Raju bhai");
-		student2.setContactNo("0753833833");
+		StudentDto student2Dto = new StudentDto();
+		student2Dto.setId(192);
+		student2Dto.setAge(29);
+		student2Dto.setCollageName("Raju bhai");
+		student2Dto.setContactNo("0753833833");
+
+		Student student2 = this.modelMapper.map(student2Dto,Student.class);
 
 		studentService.updateStudent(student2);
 		verify(studentRepository,times(1)).save(student2);
+		assertEquals(student2.getContactNo(),student2Dto.getContactNo());
+		assertEquals(student2.getId(),student2Dto.getId());
+		assertEquals(student2.getAge(),student2Dto.getAge());
+		assertEquals(student2.getCollageName(),student2Dto.getCollageName());
+		assertEquals(student2.getName(),student2Dto.getName());
+
 	}
 
     @Test
     public void testDeleteStudentService() {
 
-        Student student2 = new Student();
-        student2.setId(192);
-        student2.setAge(29);
-        student2.setCollageName("Raju bhai");
-        student2.setContactNo("0753833833");
+        StudentDto student2Dto = new StudentDto();
+		student2Dto.setId(192);
+		student2Dto.setAge(29);
+		student2Dto.setCollageName("Raju bhai");
+		student2Dto.setContactNo("0753833833");
+
+		Student student2 = this.modelMapper.map(student2Dto,Student.class);
 
         studentService.deleteStudent(student2);
         verify(studentRepository,times(1)).save(student2);
+        assertEquals(student2.getContactNo(),student2Dto.getContactNo());
+		assertEquals(student2.getId(),student2Dto.getId());
+		assertEquals(student2.getAge(),student2Dto.getAge());
+		assertEquals(student2.getCollageName(),student2Dto.getCollageName());
+		assertEquals(student2.getName(),student2Dto.getName());
     }
 
 	@Test

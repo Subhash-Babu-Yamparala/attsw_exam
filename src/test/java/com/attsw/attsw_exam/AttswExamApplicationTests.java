@@ -569,7 +569,7 @@ class AttswExamApplicationTests {
     }
 
 	@Test
-	public void updateTeachersControlerTest() throws Exception {
+	public void updateTeachersControlerTestServerErrorResponse() throws Exception {
 
 		List<Student> listODStudent2 = new ArrayList<>();
 		Student student2 = new Student();
@@ -586,20 +586,52 @@ class AttswExamApplicationTests {
 		teacher3.setContactNo("0672728882");
 		teacher3.setEmail("shewagv1@gmail.com");
 		teacher3.setName("shewag");
-		teacher3.setStudent(listODStudent2);
+		//teacher3.setStudent(listODStudent2);
 
 		Gson gson = new Gson();
 		String jsonStringTeacher = gson.toJson(teacher3);
-
-		when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher3);
+        when(teacherRepository.findByIdAndStatus(teacher3.getId(),Status.ACTIVE.getStatusSeq())).thenReturn(java.util.Optional.ofNullable(teacher3));
+		when(teacherRepository.save(teacher3)).thenReturn(teacher3);
 
 		mockMvc.perform(MockMvcRequestBuilders.put("/teacher")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonStringTeacher))
-				.andExpect(status().isNotFound());
+				.andExpect(status().isInternalServerError());
 
 		Mockito.verify(teacherRepository).findByIdAndStatus(teacher3.getId(),teacher3.getStatus());
 	}
+
+    @Test
+    public void updateTeachersControlerTestSuccessResponse() throws Exception {
+
+        Teacher teacher3 = new Teacher();
+        teacher3.setId(99);
+        teacher3.setStatus(Status.ACTIVE.getStatusSeq());
+        teacher3.setAddress("Panjab updated record");
+        teacher3.setContactNo("0672728882");
+        teacher3.setEmail("shewagv1@gmail.com");
+        teacher3.setName("shewag");
+
+        Teacher teacher4 = new Teacher();
+        teacher4.setId(99);
+        teacher4.setStatus(Status.ACTIVE.getStatusSeq());
+        teacher4.setAddress("Panjab from db");
+        teacher4.setContactNo("0672728882");
+        teacher4.setEmail("shewagv1@gmail.com");
+        teacher4.setName("shewag");
+
+        Gson gson = new Gson();
+        String jsonStringTeacher = gson.toJson(teacher3);
+        when(teacherRepository.findByIdAndStatus(teacher4.getId(),Status.ACTIVE.getStatusSeq())).thenReturn(java.util.Optional.ofNullable(teacher4));
+        when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher4);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/teacher")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonStringTeacher))
+                .andExpect(status().isOk());
+
+        Mockito.verify(teacherRepository).findByIdAndStatus(teacher3.getId(),teacher3.getStatus());
+    }
 
 	@Test
 	public void deleteTeachersControlerTest() throws Exception {
@@ -624,6 +656,31 @@ class AttswExamApplicationTests {
 
 		Mockito.verify(teacherRepository).findByIdAndStatus(teacher3.getId(),teacher3.getStatus());
 	}
+
+    @Test
+    public void deleteSuceessTeachersControlerTest() throws Exception {
+
+        Teacher teacher3 = new Teacher();
+        teacher3.setId(99);
+        teacher3.setStatus(Status.ACTIVE.getStatusSeq());
+        teacher3.setAddress("Panjab");
+        teacher3.setContactNo("0672728882");
+        teacher3.setEmail("shewagv1@gmail.com");
+        teacher3.setName("shewag");
+
+        Gson gson = new Gson();
+        when(teacherRepository.findByIdAndStatus(teacher3.getId(),Status.ACTIVE.getStatusSeq())).thenReturn(java.util.Optional.ofNullable(teacher3));
+        when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher3);
+        String jsonStringTeacher = gson.toJson(teacher3);
+
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/teacher/99")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonStringTeacher))
+                .andExpect(status().isOk());
+
+        Mockito.verify(teacherRepository).save(teacher3);
+    }
 
 	@Test
 	public void findTeacherByIdControlerTest() throws Exception {

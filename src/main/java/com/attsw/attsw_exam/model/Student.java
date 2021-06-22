@@ -14,8 +14,6 @@ import java.io.Serializable;
 @Table(name = "student")
 public class    Student extends SharedModel implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "student_id")
@@ -39,10 +37,6 @@ public class    Student extends SharedModel implements Serializable {
 
     public Student() {
         super();
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
     }
 
     public Integer getId() {

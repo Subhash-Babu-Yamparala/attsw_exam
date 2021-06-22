@@ -200,6 +200,7 @@ class AttswExamApplicationTests {
 		student2.setAge(29);
 		student2.setCollageName("Raju bhai");
 		student2.setContactNo("0753833833");
+		student2.setStatus(Status.ACTIVE.getStatusSeq());
 		listODStudent2.add(student2);
 
 		Teacher teacher3 = new Teacher();
@@ -210,6 +211,23 @@ class AttswExamApplicationTests {
 		teacher3.setName("shewag");
 		teacher3.setId(128);
 		teacher3.setStudent(listODStudent2);
+
+		teacherService.deleteTeacher(teacher3);
+		verify(teacherRepository,times(1)).save(teacher3);
+		assertEquals(teacher3.getStudent().get(0).getStatus(), Status.DELETED.getStatusSeq());
+
+	}
+
+	@Test
+	public void testDeleteTeacherWithoutStudent() {
+
+		Teacher teacher3 = new Teacher();
+		teacher3.setStatus(Status.ACTIVE.getStatusSeq());
+		teacher3.setAddress("Panjab");
+		teacher3.setContactNo("0672728882");
+		teacher3.setEmail("shewag@gmail.com");
+		teacher3.setName("shewag");
+		teacher3.setId(128);
 
 		teacherService.deleteTeacher(teacher3);
 		verify(teacherRepository,times(1)).save(teacher3);
@@ -321,13 +339,22 @@ class AttswExamApplicationTests {
 	@Test
 	public void testFindByEmailTeacher() {
 
-		Teacher teacher1 = new Teacher();
-		teacher1.setStatus(Status.ACTIVE.getStatusSeq());
-		teacher1.setAddress("colombo");
-		teacher1.setContactNo("0783833833");
-		teacher1.setEmail("sanath@gmail.com");
-		teacher1.setName("sanath");
-		teacher1.setId(123);
+		TeacherDto teacher1Dto = new TeacherDto();
+		teacher1Dto.setStatus(Status.ACTIVE.getStatusSeq());
+		teacher1Dto.setAddress("colombo");
+		teacher1Dto.setContactNo("0783833833");
+		teacher1Dto.setEmail("sanath@gmail.com");
+		teacher1Dto.setName("sanath");
+		teacher1Dto.setId(123);
+		Student student = new Student();
+		student.setId(101);
+		student.setAge(21);
+		student.setCollageName("Baya");
+		student.setContactNo("07883888383");
+		List<Student> listOFStudent = new ArrayList<>();
+		listOFStudent.add(student);
+		teacher1Dto.setStudent(listOFStudent);
+		Teacher mapedTeacher = this.modelMapper.map(teacher1Dto, Teacher.class);
 
 		Teacher teacher2 = new Teacher();
 		teacher2.setStatus(Status.ACTIVE.getStatusSeq());
@@ -337,10 +364,10 @@ class AttswExamApplicationTests {
 		teacher2.setName("sachin");
 		teacher2.setId(124);
 
-		teacherService.findByEmailAndStatus("sachin@gmail.com",Status.ACTIVE.getStatusSeq());
-		verify(teacherRepository,times(1)).findByEmailAndStatus("sachin@gmail.com",Status.ACTIVE.getStatusSeq());
+		teacherService.findByEmailAndStatus("sachin@gmail.com", Status.ACTIVE.getStatusSeq());
+		verify(teacherRepository, times(1)).findByEmailAndStatus("sachin@gmail.com", Status.ACTIVE.getStatusSeq());
+		assertEquals(mapedTeacher.getName(),teacher1Dto.getName());
 	}
-
 
 	@Test
 	public void testSaveService() {
@@ -364,6 +391,7 @@ class AttswExamApplicationTests {
 		StudentDto student2Dto = new StudentDto();
 		student2Dto.setId(192);
 		student2Dto.setAge(29);
+		student2Dto.setName("Praveen");
 		student2Dto.setCollageName("Raju bhai");
 		student2Dto.setContactNo("0753833833");
 		student2Dto.setCreatedDate(new Date());

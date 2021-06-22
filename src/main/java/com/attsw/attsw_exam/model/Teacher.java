@@ -16,8 +16,6 @@ import java.util.List;
 @Table(name = "teacher")
 public class Teacher extends SharedModel implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "teacher_id")
@@ -43,10 +41,6 @@ public class Teacher extends SharedModel implements Serializable {
     @OneToMany(cascade = CascadeType.ALL,targetEntity = Student.class)
     @JoinColumn(name = "teacher_id_fk", referencedColumnName = "teacher_id")
     private List<Student> student;
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
 
     public Integer getId() {
         return id;

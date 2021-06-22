@@ -10,7 +10,10 @@ import com.attsw.attsw_exam.repository.StudentRepository;
 import com.attsw.attsw_exam.repository.TeacherRepository;
 import com.attsw.attsw_exam.service.StudentService;
 import com.attsw.attsw_exam.service.TeacherService;
+import com.attsw.attsw_exam.utility.DateAuditingProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -26,10 +29,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.time.temporal.TemporalAccessor;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,6 +65,12 @@ class AttswExamApplicationTests {
 
 	@Autowired
 	private ModelMapper modelMapper;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@Autowired
+    private DateAuditingProvider dateAuditingProvider;
 
 	@Test
 	public void testActiveTeachersList() {
@@ -784,7 +791,112 @@ class AttswExamApplicationTests {
 
 	}
 
+	@Test
+	public void saveStudentControlerTest() throws Exception {
 
+		Student student2 = new Student();
+		student2.setId(233);
+		student2.setAge(29);
+		student2.setCollageName("Raju bhai");
+		student2.setContactNo("0753833833");
+		student2.setStatus(Status.ACTIVE.getStatusSeq());
+		student2.setName("Rohith");
+
+		Gson gson = new Gson();
+		String jsonStringStudent = gson.toJson(student2);
+
+		when(studentRepository.save(any(Student.class))).thenReturn(student2);
+
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/student")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonStringStudent))
+				.andExpect(status().isAccepted())
+				.andReturn();
+
+		String actualResponseBody =
+				mvcResult.getResponse().getContentAsString();
+		Assertions.assertThat(actualResponseBody).isEqualToIgnoringWhitespace(objectMapper.writeValueAsString(student2));
+	}
+
+	@Test
+	public void updateStudentControlerTest() throws Exception {
+
+		Student student2 = new Student();
+		student2.setId(233);
+		student2.setCollageName("Raju bhai");
+
+		Gson gson = new Gson();
+		String jsonStringStudent = gson.toJson(student2);
+
+		when(studentRepository.save(any(Student.class))).thenReturn(student2);
+
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/student")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonStringStudent))
+				.andExpect(status().isAccepted())
+				.andReturn();
+
+		String actualResponseBody =
+				mvcResult.getResponse().getContentAsString();
+		Assertions.assertThat(actualResponseBody).isEqualToIgnoringWhitespace(objectMapper.writeValueAsString(student2));
+	}
+
+	@Test
+	public void deleteStudentControlerTest() throws Exception {
+
+		Student student2 = new Student();
+		student2.setId(233);
+		student2.setStatus(Status.ACTIVE.getStatusSeq());
+		student2.setName("arjubn");
+		student2.setCollageName("analda");
+		student2.setContactNo("0783923292");
+
+		Gson gson = new Gson();
+		String jsonStringStudent = gson.toJson(student2);
+		when(studentRepository.findByIdAndStatus(student2.getId(),Status.ACTIVE.getStatusSeq())).thenReturn(java.util.Optional.ofNullable(student2));
+		when(studentRepository.save(any(Student.class))).thenReturn(student2);
+
+
+		mockMvc.perform(MockMvcRequestBuilders.delete("/student/233")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(""))
+				.andExpect(status().isOk());
+
+		Mockito.verify(studentRepository).save(student2);
+	}
+
+	@Test
+	public void getStudentControlerTest() throws Exception {
+
+		Student student2 = new Student();
+		student2.setId(233);
+		student2.setStatus(Status.ACTIVE.getStatusSeq());
+		student2.setName("arjubn");
+		student2.setCollageName("analda");
+		student2.setContactNo("0783923292");
+
+		when(studentRepository.findByIdAndStatus(student2.getId(),Status.ACTIVE.getStatusSeq())).thenReturn(java.util.Optional.ofNullable(student2));
+
+
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/student/233")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(""))
+				.andExpect(status().isOk())
+				.andReturn();
+
+		String actualResponseBody =
+				mvcResult.getResponse().getContentAsString();
+		Assertions.assertThat(actualResponseBody).isEqualToIgnoringWhitespace(objectMapper.writeValueAsString(student2));
+		Mockito.verify(studentRepository).findByIdAndStatus(student2.getId(),Status.ACTIVE.getStatusSeq());
+	}
+
+	@Test
+	public void applicationStarts() {
+		AttswExamApplication.main(new String[] {});
+        Optional<TemporalAccessor> now = dateAuditingProvider.getNow();
+        assertEquals(now,now);
+
+    }
 
     /*..///....student controller class*/
 

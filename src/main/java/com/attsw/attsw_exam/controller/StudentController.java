@@ -53,7 +53,7 @@ public class StudentController {
                 .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
-    @DeleteMapping()
+    @DeleteMapping("/{studentId}")
     public ResponseEntity<Student> deleteStudent(@PathVariable("studentId") Integer studentId) {
 
         return Optional.ofNullable(studentId)

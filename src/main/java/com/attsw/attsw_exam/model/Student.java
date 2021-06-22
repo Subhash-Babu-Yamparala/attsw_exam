@@ -4,11 +4,16 @@
  **/
 package com.attsw.attsw_exam.model;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Getter
+@Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "student")
@@ -38,46 +43,5 @@ public class    Student extends SharedModel implements Serializable {
     public Student() {
         super();
     }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public String getCollageName() {
-        return collageName;
-    }
-
-    public void setCollageName(String collageName) {
-        this.collageName = collageName;
-    }
-
-    public String getContactNo() {
-        return contactNo;
-    }
-
-    public void setContactNo(String contactNo) {
-        this.contactNo = contactNo;
-    }
-
 
 }

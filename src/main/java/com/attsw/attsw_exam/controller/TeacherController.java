@@ -92,10 +92,10 @@ public class TeacherController {
     @GetMapping("/findAllActive")
     public ResponseEntity<List<Teacher>> findAllActiveTeachers() {
         List<Teacher> allActiveTeachers = this.teacherService.findAllActive();
-        if (allActiveTeachers != null) {
-            return new ResponseEntity<>(allActiveTeachers, HttpStatus.OK);
-        } else {
+        if ( allActiveTeachers.isEmpty() ) {
             return new ResponseEntity<>(allActiveTeachers, HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(allActiveTeachers, HttpStatus.OK);
         }
     }
 

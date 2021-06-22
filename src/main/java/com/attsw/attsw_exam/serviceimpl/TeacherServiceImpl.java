@@ -31,9 +31,7 @@ public class TeacherServiceImpl implements TeacherService {
 
         teacher.setStatus(Status.ACTIVE.getStatusSeq());
         logger.info("Teacher Saved Successfully!!");
-        Teacher savedTeacher = null;
-        savedTeacher = this.teacherRepository.save(teacher);
-        return savedTeacher;
+        return this.teacherRepository.save(teacher);
 
     }
 
@@ -42,9 +40,7 @@ public class TeacherServiceImpl implements TeacherService {
 
         teacher.setStatus(Status.ACTIVE.getStatusSeq());
         teacher.setCreatedDate(dbTeacher.getCreatedDate());
-        Teacher savedObject = null;
-        savedObject = this.teacherRepository.save(teacher);
-        return savedObject;
+        return this.teacherRepository.save(teacher);
 
     }
 

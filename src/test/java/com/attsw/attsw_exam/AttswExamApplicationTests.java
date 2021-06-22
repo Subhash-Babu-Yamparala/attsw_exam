@@ -10,6 +10,7 @@ import com.attsw.attsw_exam.repository.StudentRepository;
 import com.attsw.attsw_exam.repository.TeacherRepository;
 import com.attsw.attsw_exam.service.StudentService;
 import com.attsw.attsw_exam.service.TeacherService;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -35,6 +36,7 @@ import java.util.stream.Stream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
@@ -491,19 +493,19 @@ class AttswExamApplicationTests {
 	}
 
 	@Test
-	public void findAllTeachers() throws Exception {
+    public void findAllTeachers() throws Exception {
 
-		Mockito.when(teacherRepository.findAll()).thenReturn(
-				Collections.emptyList()
-		);
+        Mockito.when(teacherRepository.findAll()).thenReturn(
+                Collections.emptyList()
+        );
 
-		MvcResult mvcResult = mockMvc.perform(
-				MockMvcRequestBuilders.get("/teacher/findAll")
-						.accept(MediaType.APPLICATION_JSON)
-		).andReturn();
+        MvcResult mvcResult = mockMvc.perform(
+                MockMvcRequestBuilders.get("/teacher/findAll")
+                        .accept(MediaType.APPLICATION_JSON)
+        ).andReturn();
 
-		Mockito.verify(teacherRepository).findAll();
-	}
+        Mockito.verify(teacherRepository).findAll();
+    }
 
 	@Test
 	public void findAllActiveTeachers() throws Exception {
@@ -534,7 +536,200 @@ class AttswExamApplicationTests {
 
 		Mockito.verify(teacherRepository).findAllByStatus(Status.DELETED.getStatusSeq());
 	}
-	/*..///....student controller class*/
+
+    @Test
+    public void saveTeachersControlerTest() throws Exception {
+
+        List<Student> listODStudent2 = new ArrayList<>();
+        Student student2 = new Student();
+        student2.setAge(29);
+        student2.setCollageName("Raju bhai");
+        student2.setContactNo("0753833833");
+        listODStudent2.add(student2);
+
+        Teacher teacher3 = new Teacher();
+        teacher3.setStatus(Status.ACTIVE.getStatusSeq());
+        teacher3.setAddress("Panjab");
+        teacher3.setContactNo("0672728882");
+        teacher3.setEmail("shewagv1@gmail.com");
+        teacher3.setName("shewag");
+        teacher3.setStudent(listODStudent2);
+
+        Gson gson = new Gson();
+        String jsonStringTeacher = gson.toJson(teacher3);
+
+		when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher3);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/teacher")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonStringTeacher))
+				.andExpect(status().isAccepted());
+
+		Mockito.verify(teacherRepository).findByEmailAndStatus(teacher3.getEmail(),teacher3.getStatus());
+    }
+
+	@Test
+	public void updateTeachersControlerTest() throws Exception {
+
+		List<Student> listODStudent2 = new ArrayList<>();
+		Student student2 = new Student();
+		student2.setId(123);
+		student2.setAge(29);
+		student2.setCollageName("Raju bhai");
+		student2.setContactNo("0753833833");
+		listODStudent2.add(student2);
+
+		Teacher teacher3 = new Teacher();
+		teacher3.setId(99);
+		teacher3.setStatus(Status.ACTIVE.getStatusSeq());
+		teacher3.setAddress("Panjab");
+		teacher3.setContactNo("0672728882");
+		teacher3.setEmail("shewagv1@gmail.com");
+		teacher3.setName("shewag");
+		teacher3.setStudent(listODStudent2);
+
+		Gson gson = new Gson();
+		String jsonStringTeacher = gson.toJson(teacher3);
+
+		when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher3);
+
+		mockMvc.perform(MockMvcRequestBuilders.put("/teacher")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonStringTeacher))
+				.andExpect(status().isNotFound());
+
+		Mockito.verify(teacherRepository).findByIdAndStatus(teacher3.getId(),teacher3.getStatus());
+	}
+
+	@Test
+	public void deleteTeachersControlerTest() throws Exception {
+
+		Teacher teacher3 = new Teacher();
+		teacher3.setId(99);
+		teacher3.setStatus(Status.ACTIVE.getStatusSeq());
+		teacher3.setAddress("Panjab");
+		teacher3.setContactNo("0672728882");
+		teacher3.setEmail("shewagv1@gmail.com");
+		teacher3.setName("shewag");
+
+		Gson gson = new Gson();
+		String jsonStringTeacher = gson.toJson(teacher3);
+
+		when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher3);
+
+		mockMvc.perform(MockMvcRequestBuilders.delete("/teacher/99")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonStringTeacher))
+				.andExpect(status().isNotFound());
+
+		Mockito.verify(teacherRepository).findByIdAndStatus(teacher3.getId(),teacher3.getStatus());
+	}
+
+	@Test
+	public void findTeacherByIdControlerTest() throws Exception {
+
+		Teacher teacher3 = new Teacher();
+		teacher3.setId(99);
+		teacher3.setStatus(Status.ACTIVE.getStatusSeq());
+		teacher3.setAddress("Panjab");
+		teacher3.setContactNo("0672728882");
+		teacher3.setEmail("shewagv1@gmail.com");
+		teacher3.setName("shewag");
+
+		Gson gson = new Gson();
+		String jsonStringTeacher = gson.toJson(teacher3);
+
+		when(teacherRepository.findByIdAndStatus(teacher3.getId(),Status.ACTIVE.getStatusSeq())).thenReturn(java.util.Optional.ofNullable(teacher3));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/99")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonStringTeacher))
+				.andExpect(status().isOk());
+
+		Mockito.verify(teacherRepository).findByIdAndStatus(teacher3.getId(),teacher3.getStatus());
+	}
+
+	@Test
+	public void testFinalAllActiveDifControlerTest() throws Exception {
+
+		Teacher teacher3 = new Teacher();
+		teacher3.setId(99);
+		teacher3.setStatus(Status.DELETED.getStatusSeq());
+		teacher3.setAddress("Panjab");
+		teacher3.setContactNo("0672728882");
+		teacher3.setEmail("shewagv1@gmail.com");
+		teacher3.setName("shewag");
+
+		Teacher teacher2 = new Teacher();
+		teacher3.setId(100);
+		teacher3.setStatus(Status.DELETED.getStatusSeq());
+		teacher3.setAddress("Maharasht");
+		teacher3.setContactNo("0464383883");
+		teacher3.setEmail("mahen@gmail.com");
+		teacher3.setName("mahen");
+
+		List<Teacher> listOFDeleletedTeachers = new ArrayList<>();
+		listOFDeleletedTeachers.add(teacher3);
+		listOFDeleletedTeachers.add(teacher2);
+
+		Mockito.when(teacherRepository.findAllByStatus(Status.DELETED.getStatusSeq())).thenReturn(listOFDeleletedTeachers);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/findAllActive")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(""))
+				.andExpect(status().isNotFound());
+
+		/*MvcResult mvcResult = mockMvc.perform(
+				MockMvcRequestBuilders.get("/teacher/findAllActive")
+						.accept(MediaType.APPLICATION_JSON)
+		).andReturn();*/
+
+		Mockito.verify(teacherRepository).findAllByStatus(Status.ACTIVE.getStatusSeq());
+
+	}
+
+	@Test
+	public void testFinalAllActiveReturnOkControlerTest() throws Exception {
+
+		Teacher teacher3 = new Teacher();
+		teacher3.setId(99);
+		teacher3.setStatus(Status.ACTIVE.getStatusSeq());
+		teacher3.setAddress("Panjab");
+		teacher3.setContactNo("0672728882");
+		teacher3.setEmail("shewagv1@gmail.com");
+		teacher3.setName("shewag");
+
+		Teacher teacher2 = new Teacher();
+		teacher3.setId(100);
+		teacher3.setStatus(Status.ACTIVE.getStatusSeq());
+		teacher3.setAddress("Maharasht");
+		teacher3.setContactNo("0464383883");
+		teacher3.setEmail("mahen@gmail.com");
+		teacher3.setName("mahen");
+
+		List<Teacher> listOFActiveTeachers = new ArrayList<>();
+		listOFActiveTeachers.add(teacher3);
+		listOFActiveTeachers.add(teacher2);
+
+		Mockito.when(teacherRepository.findAllByStatus(Status.ACTIVE.getStatusSeq())).thenReturn(listOFActiveTeachers);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/findAllActive")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(""))
+				.andExpect(status().isOk());
+
+		/*MvcResult mvcResult = mockMvc.perform(
+				MockMvcRequestBuilders.get("/teacher/findAllActive")
+						.accept(MediaType.APPLICATION_JSON)
+		).andReturn();*/
+
+		Mockito.verify(teacherRepository).findAllByStatus(Status.ACTIVE.getStatusSeq());
+
+	}
+
+
+
+    /*..///....student controller class*/
 
 
 

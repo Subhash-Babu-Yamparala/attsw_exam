@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 8889
 
 spring:
   jpa:
@@ -20,7 +20,7 @@ spring:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/attsw?currentSchema=attsw
     username: postgres
-    password: postgres
+    password: postgress
     hikari:
        maximumPoolSize: 2
        connectionTimeout: 60000
